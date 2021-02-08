@@ -60,6 +60,7 @@ server_proxy_pass="${1:-$default_server_proxy}"
 uname_out="$(uname -s)"
 vars_to_substitute="$(printf '\$%s,' $(grep -o "^APPSMITH_[A-Z0-9_]\+" ../../.env | xargs))"
 client_proxy_pass="${default_client_proxy}"
+
 network_mode="bridge"
 case "${uname_out}" in
     Linux*)     machine=Linux
@@ -87,6 +88,12 @@ case "${uname_out}" in
     "
                 ;;
     Darwin*)    machine=Mac
+        # workaround for apple silicon until host.docker.interal works as expected
+        if [[ "$(uname -m)" = "arm64" ]]
+        then
+            server_proxy_pass="http://"$(ipconfig getifaddr en0)":8080"
+            client_proxy_pass="http://"$(ipconfig getifaddr en0)":3000"
+        fi
                 echo "
     Starting nginx for MacOS...
     "
