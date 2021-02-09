@@ -1600,7 +1600,7 @@ export const theme: Theme = {
       color: Colors.MYSTIC,
     },
   ],
-  sidebarWidth: "320px",
+  sidebarWidth: "250px",
   homePage: {
     header: 52,
     leftPane: {
